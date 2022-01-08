@@ -1,5 +1,6 @@
 import click
 from requests import HTTPError
+from timeit import default_timer as timer
 
 from eero_adguard_sync.client import EeroClient, AdGuardClient
 from eero_adguard_sync.models import (
@@ -167,10 +168,14 @@ def sync(
     if eero_client.needs_login():
         if not eero_user:
             eero_user = click.prompt("Eero email address or phone number", type=str)
+        click.echo("Authenticating Eero...")
         user_token = eero_client.login(eero_user)
         verification_code = click.prompt("Verification code from email or SMS")
+        click.echo("Verifying code...")
         eero_client.login_verify(verification_code, user_token)
-    click.echo("Eero successfully authenticated")
+        click.echo("Eero successfully authenticated")
+    else:
+        click.echo("Using cached Eero credentials")
 
     # AdGuard auth
     if not adguard_host:
@@ -181,12 +186,21 @@ def sync(
     if not adguard_password:
         adguard_password = click.prompt("AdGuard password", type=str, hide_input=True)
     adguard_creds = AdGuardCredentialSet(adguard_user, adguard_password)
+    click.echo("Authenticating AdGuard...")
     adguard_client.authenticate(adguard_creds)
     click.echo("AdGuard successfully authenticated")
 
     # Handle
     handler = EeroAdGuardSyncHandler(eero_client, adguard_client)
     if not confirm:
-        click.confirm("Sync this network?", abort=True)
+        click.confirm(f"Sync this network?", abort=True)
+        if delete:
+            click.confirm(
+                "WARNING: Clients in AdGuard not found in Eero's DHCP list will be deleted, confirm?",
+                abort=True,
+            )
+    click.echo("Starting sync...")
+    start = timer()
     handler.sync(delete)
-    click.echo("Sync complete")
+    elapsed = timer() - start
+    click.echo(f"Sync complete in {round(elapsed, 2)}s")
