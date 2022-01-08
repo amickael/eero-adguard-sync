@@ -1,7 +1,7 @@
-# Eero-AdGuard Sync
+# Eero-AdGuard-Sync
 Sync Eero DHCP client list to AdGuard Home
 
-[![Release](https://github.com/amickael/eero-adguard-sync/actions/workflows/python-publish.yml/badge.svg)](https://github.com/amickael/wipeit/actions/workflows/python-publish.yml)
+[![Release](https://github.com/amickael/eero-adguard-sync/actions/workflows/python-publish.yml/badge.svg)](https://github.com/amickael/eero-adguard-sync/actions/workflows/python-publish.yml)
 [![PyPI](https://img.shields.io/pypi/v/eero-adguard-sync?color=blue)](https://pypi.org/project/wipeit/)
 [![Code style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 
@@ -10,13 +10,13 @@ Sync Eero DHCP client list to AdGuard Home
 
 Table of Contents
 =================
-* [Eero-Adguard Sync](#wipeit)
+* [Eero-Adguard-Sync](#eero-adguard-sync)
    * [Dependencies](#-dependencies)
    * [Installation](#️-installation)
    * [Usage](#-usage)
    * [Options](#️-options)
-      * [eag-sync](#eero-adguard-sync-1)
-      * [eag-sync sync](#eero-adguard-sync-sync)
+      * [eag-sync](#eag-sync)
+      * [eag-sync sync](#eag-sync-sync)
    * [Autocompletion](#-autocompletion)
       * [bash](#bash)
       * [zsh](#zsh)
@@ -28,65 +28,45 @@ Table of Contents
 ## 🛠️ Installation
 Install from PyPI using `pip`, you may need to use `pip3` depending on your installation:
 ```sh
-pip install wipeit
+pip install eero-adguard-sync
 ```
 
 ## 🚀 Usage
-**wipeit** is a command-line program to purge your Reddit history. It requires a Python interpreter version 3.7+.
+**eag-sync** is a command-line program to sync your Eero DHCP client list to AdGuard Home, note that it is a one-way sync from Eero to AdGuard. It requires Python interpreter version 3.7+.
 
-To authenticate without wiping history you can use the `login` command, a browser window will open prompting you to login to Reddit:
-```shell
-wipeit login
+To run a sync process run the `eag-sync sync` command, you can find a full list of options below. Sample usage:
+```sh
+eag-sync sync -d
 ```
----
-To wipe your Reddit history you can use the `wipe` command. The following command will clear the last 30 days of comment and submission history, and will overwrite them with random text before deletion:
-```shell
-wipeit wipe -d 30 -sco
-```
-> Note: A browser window will open to request access to your account if you have not previously authenticated.
----
-To remove Reddit credentials from your computer you can use the `logout` command:
-```shell
-wipeit logout
-```
+
+You may be prompted for an Eero email or SMS code the first time you run this program. Your credentials never leave your computer, all processing is done client side.
 
 
 ## ⚙️ Options
 ### `eag-sync`
 ```
-Usage: wipeit [OPTIONS] COMMAND [ARGS]...
+Usage: eag-sync [OPTIONS] COMMAND [ARGS]...
 
 Options:
   --version  Show the version and exit.
-  --help     Show help message and exit.
+  --help     Show this message and exit.
 
 Commands:
-  login   Authorize wipeit with a Reddit account, will open a browser
-          window...
-
-  logout  Remove Reddit credentials from wipeit, you will be prompted to...
-  wipe    Wipe your Reddit history.
+  sync
 ```
 
 ### `eag-sync sync`
 ```
-Usage: wipeit wipe [OPTIONS]
-
-  Wipe your Reddit history.
+Usage: eag-sync sync [OPTIONS]
 
 Options:
-  -d, --days INTEGER RANGE  Number of days worth of content to delete.
-                            Defaults to 365.
-
-  -f, --from-date TEXT      Date relative to --days, in ISO format (YYYY-MM-
-                            DD). Defaults to today.
-
-  -c, --comments            Delete comments.
-  -s, --submissions         Delete submissions.
-  -o, --overwrite           Overwrite content with random text before
-                            deletion.
-
-  --help                    Show help message and exit.
+  --adguard-host TEXT      AdGuard Home host IP address
+  --adguard-user TEXT      AdGuard Home username
+  --adguard-password TEXT  AdGuard Home password
+  --eero-user TEXT         Eero email address or phone number
+  -d, --delete             Delete AdGuard clients not found in Eero DHCP list
+  -y, --confirm            Skip interactive confirmation
+  --help                   Show this message and exit.
 ```
 
 ## 🪄 Autocompletion
@@ -97,13 +77,13 @@ This configuration is totally optional, but may be useful if you use `eag-sync` 
 ### bash
 Add the following to ` ~/.bashrc`:
 ```shell
-eval "$(_WIPEIT_COMPLETE=bash_source wipeit)"
+eval "$(_EAG_SYNC_COMPLETE=bash_source eag-sync)"
 ```
 
 ### zsh
 Add the following to `~/.zshrc`:
 ```shell
-eval "$(_WIPEIT_COMPLETE=zsh_source wipeit)"
+eval "$(_EAG_SYNC_COMPLETE=zsh_source eag-sync)"
 ```
 
 
