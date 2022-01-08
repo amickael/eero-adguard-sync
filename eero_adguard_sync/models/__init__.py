@@ -1,4 +1,2 @@
-from .adguard import (
-    AdGuardCredentialSet,
-    AdGuardClientDevice,
-)
+from .adguard import AdGuardCredentialSet, AdGuardClientDevice
+from .eero import EeroClientDevice

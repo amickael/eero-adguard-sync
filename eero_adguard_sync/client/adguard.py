@@ -1,16 +1,29 @@
 from dataclasses import asdict
+from urllib.parse import urlparse
 
 from eero_adguard_sync.utils import BaseURLSession
 from eero_adguard_sync.models import AdGuardClientDevice, AdGuardCredentialSet
 
 
 class AdGuardClient:
+    model_fields = {
+        "ids",
+        "name",
+        "tags",
+        "use_global_settings",
+        "use_global_blocked_services",
+        "upstreams",
+    }
+
     def __init__(
         self,
-        server_url: str,
+        server_ip: str,
         auto_auth: bool = False,
         credentials: AdGuardCredentialSet = None,
     ):
+        if not server_ip.endswith("/"):
+            server_ip += "/"
+        server_url = urlparse(server_ip, "http").geturl().replace("///", "//")
         self.session = BaseURLSession(server_url)
         self.__logged_in = False
         if auto_auth:
@@ -25,15 +38,24 @@ class AdGuardClient:
         return self.__logged_in
 
     def authenticate(self, credentials: AdGuardCredentialSet):
-        resp = self.session.post("/control/login", json=asdict(credentials))
+        resp = self.session.post("control/login", json=asdict(credentials))
         resp.raise_for_status()
         self.__logged_in = True
 
     def get_clients(self) -> list[AdGuardClientDevice]:
-        resp = self.session.get("/control/clients")
+        resp = self.session.get("control/clients")
         resp.raise_for_status()
         data = resp.json()
-        return [AdGuardClientDevice(**i) for i in data]
+        clients: list[AdGuardClientDevice] = []
+        client_list = data["clients"]
+        if not client_list:
+            return []
+        for client in client_list:
+            new_client = {}
+            for key in self.model_fields:
+                new_client[key] = client[key]
+            clients.append(AdGuardClientDevice(**new_client, instance=client))
+        return clients
 
     def __perform_client_action(self, endpoint: str, payload: dict) -> dict:
         resp = self.session.post(endpoint, json=payload)
@@ -42,14 +64,17 @@ class AdGuardClient:
 
     def add_client_device(self, device: AdGuardClientDevice) -> dict:
         payload = asdict(device)
-        return self.__perform_client_action("/control/clients/add", payload)
+        payload.pop("instance")
+        return self.__perform_client_action("control/clients/add", payload)
 
     def remove_client_device(self, device_name: str) -> dict:
         payload = {"name": device_name}
-        return self.__perform_client_action("/control/clients/delete", payload)
+        return self.__perform_client_action("control/clients/delete", payload)
 
     def update_client_device(
         self, device_name: str, device: AdGuardClientDevice
     ) -> dict:
-        payload = {"name": device_name, "data": asdict(device)}
-        return self.__perform_client_action("/control/clients/update", payload)
+        new_data = asdict(device)
+        old_data = new_data.pop("instance")
+        payload = {"name": device_name, "data": {**old_data, **new_data}}
+        return self.__perform_client_action("control/clients/update", payload)

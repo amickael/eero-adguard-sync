@@ -3,6 +3,7 @@ import os
 import eero
 
 from eero_adguard_sync.utils import app_paths
+from eero_adguard_sync.models import EeroClientDevice
 
 
 class CookieStore(eero.SessionStorage):
@@ -28,6 +29,17 @@ class CookieStore(eero.SessionStorage):
 
 
 class EeroClient(eero.Eero):
+    model_fields = {"ips", "mac", "nickname", "device_type", "wireless"}
+
     def __init__(self):
         session = CookieStore(os.path.join(app_paths.app_data_path, "session.cookie"))
         super().__init__(session)
+
+    def get_clients(self, network: str) -> list[EeroClientDevice]:
+        devices: list[EeroClientDevice] = []
+        for device in self.devices(network):
+            new_device = {}
+            for key in self.model_fields:
+                new_device[key] = device[key]
+            devices.append(EeroClientDevice(**new_device))
+        return devices

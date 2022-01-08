@@ -1,3 +1,4 @@
+import hashlib
 from dataclasses import dataclass, field
 
 
@@ -9,7 +10,8 @@ class AdGuardClientDevice:
     use_global_settings: bool = True
     use_global_blocked_services: bool = True
     upstreams: list[str] = field(default_factory=list)
-    filtering_enabled: bool = False
-    parental_enabled: bool = False
-    safebrowsing_enabled: bool = False
-    safesearch_enabled: bool = False
+    instance: dict = field(default_factory=dict)
+
+    @property
+    def id_hash(self) -> str:
+        return hashlib.md5("".join(sorted(self.ids)).encode("utf-8")).hexdigest()
