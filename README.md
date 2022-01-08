@@ -6,7 +6,7 @@ Sync Eero DHCP client list to AdGuard Home
 [![Code style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 
 
-![eero-adguard-sync](https://repository-images.githubusercontent.com/365859955/17783580-b1d0-11eb-9738-6d2bc92644e6)
+![eero-adguard-sync](https://repository-images.githubusercontent.com/445873210/a0dcb692-fe53-4e6e-83a9-4507664080c1)
 
 Table of Contents
 =================
