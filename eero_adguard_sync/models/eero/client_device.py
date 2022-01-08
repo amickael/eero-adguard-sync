@@ -1,4 +1,4 @@
-import hashlib
+import macaddress
 from dataclasses import dataclass
 
 from eero_adguard_sync.utils import CLIENT_TAG_MAP
@@ -22,10 +22,8 @@ class EeroClientDevice:
         return [self.mac, *self.ips]
 
     @property
-    def id_hash(self) -> str:
-        return hashlib.md5(
-            "".join(sorted(self.identifiers)).encode("utf-8")
-        ).hexdigest()
+    def normalized_mac(self) -> str:
+        return str(macaddress.MAC(self.mac))
 
     def as_adguard_device(self) -> AdGuardClientDevice:
         return AdGuardClientDevice(

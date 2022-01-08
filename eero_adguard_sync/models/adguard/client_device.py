@@ -1,4 +1,4 @@
-import hashlib
+import macaddress
 from dataclasses import dataclass, field
 
 
@@ -13,5 +13,13 @@ class AdGuardClientDevice:
     instance: dict = field(default_factory=dict)
 
     @property
-    def id_hash(self) -> str:
-        return hashlib.md5("".join(sorted(self.ids)).encode("utf-8")).hexdigest()
+    def normalized_mac(self) -> str:
+        mac = ""
+        for identifier in self.ids:
+            try:
+                mac = str(macaddress.MAC(identifier))
+            except ValueError:
+                continue
+            else:
+                break
+        return mac

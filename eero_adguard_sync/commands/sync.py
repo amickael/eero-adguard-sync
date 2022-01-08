@@ -51,10 +51,12 @@ class EeroAdGuardSyncHandler:
     def associate_devices(
         eero_clients: list[EeroClientDevice], adguard_clients: list[AdGuardClientDevice]
     ) -> list[tuple[EeroClientDevice, AdGuardClientDevice]]:
-        adguard_client_map = {client.id_hash: client for client in adguard_clients}
+        adguard_client_map = {
+            client.normalized_mac: client for client in adguard_clients
+        }
         devices = []
         for eero_device in eero_clients:
-            adguard_device = adguard_client_map.get(eero_device.id_hash)
+            adguard_device = adguard_client_map.get(eero_device.normalized_mac)
             if adguard_device:
                 pair = (eero_device, adguard_device)
                 devices.append(pair)
@@ -64,18 +66,22 @@ class EeroAdGuardSyncHandler:
     def discover_devices(
         eero_devices: list[EeroClientDevice], adguard_devices: list[AdGuardClientDevice]
     ) -> list[EeroClientDevice]:
-        adguard_id_hashes = {device.id_hash for device in adguard_devices}
+        adguard_id_hashes = {device.normalized_mac for device in adguard_devices}
         return [
-            device for device in eero_devices if device.id_hash not in adguard_id_hashes
+            device
+            for device in eero_devices
+            if device.normalized_mac not in adguard_id_hashes
         ]
 
     @staticmethod
     def prune_devices(
         eero_devices: list[EeroClientDevice], adguard_devices: list[AdGuardClientDevice]
     ) -> list[AdGuardClientDevice]:
-        eero_id_hashes = {device.id_hash for device in eero_devices}
+        eero_id_hashes = {device.normalized_mac for device in eero_devices}
         return [
-            device for device in adguard_devices if device.id_hash not in eero_id_hashes
+            device
+            for device in adguard_devices
+            if device.normalized_mac not in eero_id_hashes
         ]
 
     def sync(self, delete: bool = False):
@@ -96,7 +102,12 @@ class EeroAdGuardSyncHandler:
             try:
                 self.adguard_client.add_client_device(eero_device.as_adguard_device())
             except HTTPError as e:
-                if e.response.text.strip() != "Client already exists":
+                if e.response.text.strip() == "Client already exists":
+                    click.secho(
+                        f"Skipped device, duplicate name in Eero network: '{eero_device.nickname}' [{eero_device.mac}]",
+                        fg="red",
+                    )
+                else:
                     raise
 
         # Delete
@@ -134,12 +145,20 @@ class EeroAdGuardSyncHandler:
     default=False,
     help="Delete AdGuard clients not found in Eero DHCP list",
 )
+@click.option(
+    "--confirm",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Skip interactive confirmation",
+)
 def sync(
     adguard_host: str = None,
     adguard_user: str = None,
     adguard_password: str = None,
     eero_user: str = None,
     delete: bool = False,
+    confirm: bool = False,
     *args,
     **kwargs,
 ):
@@ -167,6 +186,7 @@ def sync(
 
     # Handle
     handler = EeroAdGuardSyncHandler(eero_client, adguard_client)
-    click.confirm("Confirm sync", abort=True)
+    if not confirm:
+        click.confirm("Sync this network?", abort=True)
     handler.sync(delete)
     click.echo("Sync complete")
