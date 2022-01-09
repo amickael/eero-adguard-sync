@@ -1,7 +1,7 @@
 import click
 
 from eero_adguard_sync import VERSION
-from eero_adguard_sync.commands import sync
+from eero_adguard_sync.commands import sync, clear
 
 
 @click.group()
@@ -11,6 +11,7 @@ def cli():
 
 
 cli.add_command(sync)
+cli.add_command(clear)
 
 
 if __name__ == "__main__":

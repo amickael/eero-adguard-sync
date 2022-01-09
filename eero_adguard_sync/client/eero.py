@@ -30,10 +30,18 @@ class CookieStore(eero.SessionStorage):
 
 class EeroClient(eero.Eero):
     model_fields = {"ips", "mac", "nickname", "device_type", "wireless"}
+    cookie_path = os.path.join(app_paths.app_data_path, "session.cookie")
 
     def __init__(self):
-        session = CookieStore(os.path.join(app_paths.app_data_path, "session.cookie"))
+        session = CookieStore(self.cookie_path)
         super().__init__(session)
+
+    @classmethod
+    def clear_credentials(cls):
+        try:
+            os.remove(cls.cookie_path)
+        except FileNotFoundError:
+            pass
 
     def get_clients(self, network: str) -> list[EeroClientDevice]:
         devices: list[EeroClientDevice] = []

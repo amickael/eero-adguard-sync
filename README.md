@@ -17,6 +17,7 @@ Table of Contents
    * [Options](#️-options)
       * [eag-sync](#eag-sync)
       * [eag-sync sync](#eag-sync-sync)
+      * [eag-sync clear](#eag-sync-clear)
    * [Autocompletion](#-autocompletion)
       * [bash](#bash)
       * [zsh](#zsh)
@@ -27,7 +28,7 @@ Table of Contents
 
 ## 🛠️ Installation
 Install from PyPI using `pip`, you may need to use `pip3` depending on your installation:
-```sh
+```shell
 pip install eero-adguard-sync
 ```
 
@@ -35,11 +36,16 @@ pip install eero-adguard-sync
 **eag-sync** is a command-line program to sync your Eero DHCP client list to AdGuard Home, note that it is a one-way sync from Eero to AdGuard. It requires Python interpreter version 3.7+.
 
 To run a sync process run the `eag-sync sync` command, you can find a full list of options below. Sample usage:
-```sh
+```shell
 eag-sync sync -d
 ```
 
 You may be prompted for an Eero email or SMS code the first time you run this program. Your credentials never leave your computer, all processing is done client side.
+
+To clear all locally cached credentials run the `clear` command:
+```shell
+eag-sync clear
+```
 
 
 ## ⚙️ Options
@@ -67,6 +73,15 @@ Options:
   -d, --delete             Delete AdGuard clients not found in Eero DHCP list
   -y, --confirm            Skip interactive confirmation
   --help                   Show this message and exit.
+```
+
+### `eag-sync clear`
+```
+Usage: eag-sync clear [OPTIONS]
+
+Options:
+  -y, --confirm  Skip interactive confirmation
+  --help         Show this message and exit.
 ```
 
 ## 🪄 Autocompletion
