@@ -2,7 +2,7 @@
 Sync Eero DHCP client list to AdGuard Home
 
 [![Release](https://github.com/amickael/eero-adguard-sync/actions/workflows/python-publish.yml/badge.svg)](https://github.com/amickael/eero-adguard-sync/actions/workflows/python-publish.yml)
-[![PyPI](https://img.shields.io/pypi/v/eero-adguard-sync?color=blue)](https://pypi.org/project/wipeit/)
+[![PyPI](https://img.shields.io/pypi/v/eero-adguard-sync?color=blue)](https://pypi.org/project/eero-adguard-sync/)
 [![Code style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 
 
