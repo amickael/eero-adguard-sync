@@ -78,3 +78,8 @@ class AdGuardClient:
         old_data = new_data.pop("instance")
         payload = {"name": device_name, "data": {**old_data, **new_data}}
         return self.__perform_client_action("control/clients/update", payload)
+
+    def clear_clients(self):
+        clients = self.get_clients()
+        for client in clients:
+            self.remove_client_device(client.name)
