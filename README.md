@@ -73,6 +73,7 @@ Options:
   --eero-user TEXT         Eero email address or phone number
   -d, --delete             Delete AdGuard clients not found in Eero DHCP list
   -y, --confirm            Skip interactive confirmation
+  -o, --overwrite          Delete all AdGuard clients before sync
   --help                   Show this message and exit.
 ```
 
