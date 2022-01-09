@@ -59,6 +59,7 @@ Options:
 
 Commands:
   sync
+  clear
 ```
 
 ### `eag-sync sync`
