@@ -37,7 +37,7 @@ pip install eero-adguard-sync
 
 To run a sync process run the `eag-sync sync` command, you can find a full list of options below. Sample usage:
 ```shell
-eag-sync sync -d
+eag-sync sync
 ```
 
 You may be prompted for an Eero email or SMS code the first time you run this program. Your credentials never leave your computer, all processing is done client side.
