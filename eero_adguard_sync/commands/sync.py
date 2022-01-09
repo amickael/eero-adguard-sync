@@ -102,12 +102,29 @@ class EeroAdGuardSyncHandler:
     def sync(self, delete: bool = False, overwrite: bool = False):
         if overwrite:
             self.adguard_client.clear_clients()
-        eero_table = DHCPClientTable(
-            [i.to_dhcp_client() for i in self.eero_client.get_clients(self.__network)]
-        )
-        adguard_table = DHCPClientTable(
-            [i.to_dhcp_client() for i in self.adguard_client.get_clients()]
-        )
+
+        eero_clients = []
+        for client in self.eero_client.get_clients(self.__network):
+            try:
+                eero_clients.append(client.to_dhcp_client())
+            except ValueError:
+                click.secho(
+                    f"Eero device missing MAC address, skipped device named '{client.nickname}'",
+                    fg="red",
+                )
+        eero_table = DHCPClientTable(eero_clients)
+
+        adguard_clients = []
+        for client in self.adguard_client.get_clients():
+            try:
+                adguard_clients.append(client.to_dhcp_client())
+            except ValueError:
+                click.secho(
+                    f"AdGuard device missing MAC address, skipped device named '{client.name}'",
+                    fg="red",
+                )
+        adguard_table = DHCPClientTable(adguard_clients)
+
         dhcp_diff = adguard_table.compare(eero_table)
         if not overwrite:
             self.update(dhcp_diff)
