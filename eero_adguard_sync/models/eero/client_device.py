@@ -11,7 +11,6 @@ class EeroClientDevice:
     mac: str
     nickname: str
     device_type: str
-    wireless: bool = False
 
     @property
     def adguard_device_type(self) -> str:
