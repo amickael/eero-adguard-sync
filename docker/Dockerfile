@@ -1,7 +1,6 @@
 FROM python:3.10
 ENV PYTHONUNBUFFERED=1
 
-ARG CRON_SCHEDULE
 ARG EERO_COOKIE
 ARG ADGUARD_HOST
 ARG ADGUARD_USER
@@ -16,6 +15,6 @@ ENV EAG_SYNC_FLAGS=$SYNC_FLAGS
 
 RUN pip install eero-adguard-sync
 
-COPY ./sync.sh /etc/cron.$CRON_SCHEDULE/
+COPY ./sync.sh /etc/cron.hourly/
 
 CMD ["cron", "-f"]
