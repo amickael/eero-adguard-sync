@@ -15,6 +15,7 @@ ENV EAG_ADGUARD_PASS=$ADGUARD_PASS
 ENV EAG_SYNC_FLAGS=$SYNC_FLAGS
 
 RUN apt-get update && apt-get -y install cron
+RUN sleep 15
 RUN pip install eero-adguard-sync==$EAG_VERSION
 
 COPY ./sync.sh /etc/cron.hourly/
