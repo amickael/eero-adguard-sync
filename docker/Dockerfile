@@ -16,7 +16,16 @@ ENV EAG_SYNC_FLAGS=$SYNC_FLAGS
 
 RUN apt-get update && apt-get -y install cron
 RUN sleep 15
-RUN pip install eero-adguard-sync==$EAG_VERSION
+RUN  \
+    max_retry=5 \
+    counter=0 \
+    until pip install eero-adguard-sync==$EAG_VERSION \
+    do \
+       sleep 10 \
+       [[ counter -eq $max_retry ]] && echo "Failed!" && exit 1 \
+       echo "Trying again. Try #$counter" \
+       ((counter++)) \
+    done
 
 COPY ./sync.sh /etc/cron.hourly/
 
