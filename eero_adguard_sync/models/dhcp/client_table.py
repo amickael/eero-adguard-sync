@@ -38,7 +38,8 @@ class DHCPClientTable:
         return {str(i.mac_address): i for i in self.clients}
 
     def __discover(self, table: "DHCPClientTable") -> list[DHCPClient]:
-        return [v for k, v in table.hash_table.items() if k not in self.hash_table]
+        tbl = self.hash_table
+        return [v for k, v in table.hash_table.items() if k not in tbl]
 
     def __associate(
         self, table: "DHCPClientTable"
@@ -47,7 +48,8 @@ class DHCPClientTable:
         return [(v, tbl[k]) for k, v in self.hash_table.items() if k in tbl]
 
     def __prune(self, table: "DHCPClientTable") -> list[DHCPClient]:
-        return [v for k, v in self.hash_table.items() if k not in table.hash_table]
+        tbl = table.hash_table
+        return [v for k, v in self.hash_table.items() if k not in tbl]
 
     def compare(self, table: "DHCPClientTable") -> DHCPClientTableDiff:
         return DHCPClientTableDiff(
