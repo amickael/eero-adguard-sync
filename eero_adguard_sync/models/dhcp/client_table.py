@@ -43,11 +43,8 @@ class DHCPClientTable:
     def __associate(
         self, table: "DHCPClientTable"
     ) -> list[tuple[DHCPClient, DHCPClient]]:
-        return [
-            (v, table.hash_table[k])
-            for k, v in self.hash_table.items()
-            if k in table.hash_table
-        ]
+        tbl = table.hash_table
+        return [(v, tbl[k]) for k, v in self.hash_table.items() if k in tbl]
 
     def __prune(self, table: "DHCPClientTable") -> list[DHCPClient]:
         return [v for k, v in self.hash_table.items() if k not in table.hash_table]
