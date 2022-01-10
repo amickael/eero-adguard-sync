@@ -41,10 +41,7 @@ class AdGuardClientDevice(DHCPClientDevice):
     @classmethod
     def from_dhcp_client(cls, dhcp_client: "DHCPClient") -> "AdGuardClientDevice":
         return cls(
-            ids=[
-                str(dhcp_client.mac_address),
-                *[str(i.ip) for i in dhcp_client.ip_interfaces],
-            ],
+            ids=list(dhcp_client.identifiers),
             name=dhcp_client.nickname,
             tags=dhcp_client.tags,
         )

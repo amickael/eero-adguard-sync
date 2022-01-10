@@ -13,6 +13,14 @@ class DHCPClient:
     instance: object
     tags: list[str] = field(default_factory=list)
 
+    @property
+    def identifiers(self) -> set[str]:
+        identifiers = {str(self.mac_address)}
+        for interface in self.ip_interfaces:
+            identifiers.add(interface.ip.exploded)
+            identifiers.add(interface.ip.compressed)
+        return identifiers
+
 
 @dataclass
 class DHCPClientTableDiff:
