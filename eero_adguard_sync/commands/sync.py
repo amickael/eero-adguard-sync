@@ -63,7 +63,17 @@ class EeroAdGuardSyncHandler:
                         AdGuardClientDevice.from_dhcp_client(eero_device)
                     )
                 except HTTPError as e:
-                    if e.response.text.strip() == "Client already exists":
+                    errors = [
+                        "client already exists",
+                        "another client uses the same id",
+                    ]
+                    if any(
+                        [
+                            True
+                            for error in errors
+                            if error.lower() in e.response.text.lower()
+                        ]
+                    ):
                         duplicate_devices.append(
                             f"'{eero_device.nickname}' [{eero_device.mac_address}]"
                         )
