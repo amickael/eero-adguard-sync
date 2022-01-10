@@ -12,7 +12,6 @@ class AdGuardClient:
         "tags",
         "use_global_settings",
         "use_global_blocked_services",
-        "upstreams",
     }
 
     def __init__(
@@ -54,7 +53,7 @@ class AdGuardClient:
             new_client = {}
             for key in self.model_fields:
                 new_client[key] = client[key]
-            clients.append(AdGuardClientDevice(**new_client, instance=client))
+            clients.append(AdGuardClientDevice(**new_client, params=client))
         return clients
 
     def __perform_client_action(self, endpoint: str, payload: dict) -> dict:
@@ -64,7 +63,7 @@ class AdGuardClient:
 
     def add_client_device(self, device: AdGuardClientDevice) -> dict:
         payload = asdict(device)
-        payload.pop("instance")
+        payload.pop("params")
         return self.__perform_client_action("control/clients/add", payload)
 
     def remove_client_device(self, device_name: str) -> dict:
@@ -74,8 +73,8 @@ class AdGuardClient:
     def update_client_device(
         self, device_name: str, device: AdGuardClientDevice
     ) -> dict:
-        new_data = asdict(device)
-        old_data = new_data.pop("instance")
+        new_data = device.update_dict
+        old_data = new_data.pop("params")
         payload = {"name": device_name, "data": {**old_data, **new_data}}
         return self.__perform_client_action("control/clients/update", payload)
 

@@ -83,10 +83,11 @@ class EeroAdGuardSyncHandler:
         with click.progressbar(
             diff.associated, label="Update existing clients", show_pos=True
         ) as bar:
-            for eero_device, adguard_device in bar:
+            for adguard_device, eero_device in bar:
+                new_device = AdGuardClientDevice.from_dhcp_client(eero_device)
+                new_device.params = adguard_device.instance.params
                 self.adguard_client.update_client_device(
-                    adguard_device.nickname,
-                    AdGuardClientDevice.from_dhcp_client(adguard_device),
+                    adguard_device.nickname, new_device
                 )
 
     def delete(self, diff: DHCPClientTableDiff):
@@ -155,6 +156,11 @@ class EeroAdGuardSyncHandler:
     type=str,
 )
 @click.option(
+    "--eero-cookie",
+    help="Eero session cookie",
+    type=str,
+)
+@click.option(
     "--delete",
     "-d",
     is_flag=True,
@@ -180,6 +186,7 @@ def sync(
     adguard_user: str = None,
     adguard_password: str = None,
     eero_user: str = None,
+    eero_cookie: str = None,
     delete: bool = False,
     confirm: bool = False,
     overwrite: bool = False,
@@ -187,7 +194,7 @@ def sync(
     **kwargs,
 ):
     # Eero auth
-    eero_client = EeroClient()
+    eero_client = EeroClient(eero_cookie)
     if eero_client.needs_login():
         if not eero_user:
             eero_user = click.prompt("Eero email address or phone number", type=str)

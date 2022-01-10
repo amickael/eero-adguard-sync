@@ -1,5 +1,5 @@
 import ipaddress
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 from typing import Union
 
 import macaddress
@@ -14,8 +14,14 @@ class AdGuardClientDevice(DHCPClientDevice):
     tags: list[str]
     use_global_settings: bool = True
     use_global_blocked_services: bool = True
-    upstreams: list[str] = field(default_factory=list)
-    instance: dict = field(default_factory=dict)
+    params: dict = field(default_factory=dict)
+
+    @property
+    def update_dict(self) -> dict:
+        data = asdict(self)
+        data.pop("use_global_settings")
+        data.pop("use_global_blocked_services")
+        return data
 
     @property
     def mac_address(self) -> macaddress.MAC:
@@ -40,6 +46,8 @@ class AdGuardClientDevice(DHCPClientDevice):
 
     @classmethod
     def from_dhcp_client(cls, dhcp_client: "DHCPClient") -> "AdGuardClientDevice":
+        if isinstance(dhcp_client.instance, cls):
+            return dhcp_client.instance
         return cls(
             ids=list(dhcp_client.identifiers),
             name=dhcp_client.nickname,

@@ -40,8 +40,10 @@ class EeroClient(eero.Eero):
     }
     cookie_path = os.path.join(app_paths.app_data_path, "session.cookie")
 
-    def __init__(self):
+    def __init__(self, cookie: str = None):
         session = CookieStore(self.cookie_path)
+        if cookie:
+            session.cookie = cookie
         super().__init__(session)
 
     @classmethod
