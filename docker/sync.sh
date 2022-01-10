@@ -1,3 +1,5 @@
+#!/bin/bash
+
 eag-sync sync \
   --eero-cookie "$EAG_EERO_COOKIE" \
   --adguard-host "$EAG_ADGUARD_HOST" \
