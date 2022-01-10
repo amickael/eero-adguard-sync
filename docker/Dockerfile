@@ -1,22 +1,9 @@
-FROM python:3.10
+FROM python:3.10-alpine
 ENV PYTHONUNBUFFERED=1
 
 ARG EAG_VERSION
-ARG EERO_COOKIE
-ARG ADGUARD_HOST
-ARG ADGUARD_USER
-ARG ADGUARD_PASS
-ARG SYNC_FLAGS
-
-ENV EAG_EERO_COOKIE=$EERO_COOKIE
-ENV EAG_ADGUARD_HOST=$ADGUARD_HOST
-ENV EAG_ADGUARD_USER=$ADGUARD_USER
-ENV EAG_ADGUARD_PASS=$ADGUARD_PASS
-ENV EAG_SYNC_FLAGS=$SYNC_FLAGS
-
-RUN apt-get update && apt-get -y install cron
 RUN until pip install eero-adguard-sync==$EAG_VERSION; do sleep 1; done
 
-COPY ./sync.sh /etc/cron.hourly/sync
-
-CMD ["cron", "-f", "-L", "15"]
+COPY ./entrypoint.sh .
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["crond", "-f"]
