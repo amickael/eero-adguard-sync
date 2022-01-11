@@ -105,6 +105,10 @@ eval "$(_EAG_SYNC_COMPLETE=zsh_source eag-sync)"
 ```
 
 ## 🐋 Docker
+A Docker image that executes `eag-sync sync` on a `cron` schedule is available on Docker Hub with the tag [`amickael/eero-adguard-sync`](https://hub.docker.com/repository/docker/amickael/eero-adguard-sync). Some environment variables are required when running a container, see the table below for details.
+
+You can also build the image locally using the `Dockerfile` located in `/docker`.
+
 **Variable**|**Name**|**Notes**|**Required**|**Default**
 -----|-----|-----|-----|-----
 EAG\_EERO\_COOKIE|Eero session cookie value|Eero session cookie value from output of `eag-sync sync --debug`|Yes| 
