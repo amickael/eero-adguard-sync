@@ -191,6 +191,12 @@ class EeroAdGuardSyncHandler:
     default=False,
     help="Delete all AdGuard clients before sync",
 )
+@click.option(
+    "--debug",
+    is_flag=True,
+    default=False,
+    help="Display debug information",
+)
 def sync(
     adguard_host: str = None,
     adguard_user: str = None,
@@ -200,6 +206,7 @@ def sync(
     delete: bool = False,
     confirm: bool = False,
     overwrite: bool = False,
+    debug: bool = False,
     *args,
     **kwargs,
 ):
@@ -216,6 +223,9 @@ def sync(
         click.echo("Eero successfully authenticated")
     else:
         click.echo("Using cached Eero credentials")
+    if debug:
+        click.echo(f"Eero cookie value: {eero_client.session.cookie}")
+        exit()
 
     # AdGuard auth
     if not adguard_host:
