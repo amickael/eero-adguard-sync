@@ -21,6 +21,7 @@ Table of Contents
    * [Autocompletion](#-autocompletion)
       * [bash](#bash)
       * [zsh](#zsh)
+   * [Docker](#-docker)
    * [License](#️-license)
 
 ## 👶 Dependencies
@@ -86,7 +87,7 @@ Options:
   --help         Show this message and exit.
 ```
 
-## 🪄 Autocompletion
+## 🔮 Autocompletion
 To enable tab completion you will need to configure your preferred shell to use it. Currently `bash` and `zsh` are supported.
 
 This configuration is totally optional, but may be useful if you use `eag-sync` often.
@@ -102,6 +103,16 @@ Add the following to `~/.zshrc`:
 ```shell
 eval "$(_EAG_SYNC_COMPLETE=zsh_source eag-sync)"
 ```
+
+## 🐋 Docker
+**Variable**|**Name**|**Notes**|**Required**|**Default**
+-----|-----|-----|-----|-----
+EAG\_EERO\_COOKIE|Eero session cookie value| |x| 
+EAG\_ADGUARD\_HOST|AdGuard host IP address| |x| 
+EAG\_ADGUARD\_USER|AdGuard admin username| |x| 
+EAG\_ADGUARD\_PASS|AdGuard admin password| |x| 
+EAG\_SYNC\_FLAGS|eag-sync sync command flags|Sync flags without the dash, e.g. EAG\_SYNC\_FLAGS="d"| |-y
+EAG\_CRON\_SCHEDULE|Sync schedule in cron syntax|See crontab.guru for examples| |0 0 * * *
 
 
 ## ⚖️ License
