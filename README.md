@@ -93,7 +93,7 @@ To enable tab completion you will need to configure your preferred shell to use 
 This configuration is totally optional, but may be useful if you use `eag-sync` often.
 
 ### bash
-Add the following to ` ~/.bashrc`:
+Add the following to `~/.bashrc`:
 ```shell
 eval "$(_EAG_SYNC_COMPLETE=bash_source eag-sync)"
 ```
@@ -107,12 +107,12 @@ eval "$(_EAG_SYNC_COMPLETE=zsh_source eag-sync)"
 ## 🐋 Docker
 **Variable**|**Name**|**Notes**|**Required**|**Default**
 -----|-----|-----|-----|-----
-EAG\_EERO\_COOKIE|Eero session cookie value| |x| 
-EAG\_ADGUARD\_HOST|AdGuard host IP address| |x| 
-EAG\_ADGUARD\_USER|AdGuard admin username| |x| 
-EAG\_ADGUARD\_PASS|AdGuard admin password| |x| 
-EAG\_SYNC\_FLAGS|eag-sync sync command flags|Sync flags without the dash, e.g. EAG\_SYNC\_FLAGS="d"| |-y
-EAG\_CRON\_SCHEDULE|Sync schedule in cron syntax|See crontab.guru for examples| |0 0 * * *
+EAG\_EERO\_COOKIE|Eero session cookie value|Eero session cookie value from output of `eag-sync sync --debug`|Yes| 
+EAG\_ADGUARD\_HOST|AdGuard host IP address| |Yes| 
+EAG\_ADGUARD\_USER|AdGuard admin username| |Yes| 
+EAG\_ADGUARD\_PASS|AdGuard admin password| |Yes| 
+EAG\_SYNC\_FLAGS|`eag-sync` `sync` command flags|Sync flags without the dash, e.g. `EAG_SYNC_FLAGS="d"`<br><br>Note: `-y` is always appended|No|-y
+EAG\_CRON\_SCHEDULE|Sync schedule in cron syntax|See [crontab.guru](https://crontab.guru) for examples|No|`0 0 * * *`
 
 
 ## ⚖️ License
