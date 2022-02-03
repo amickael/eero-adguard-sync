@@ -21,6 +21,7 @@ Table of Contents
    * [Autocompletion](#-autocompletion)
       * [bash](#bash)
       * [zsh](#zsh)
+   * [Docker](#-docker)
    * [License](#️-license)
 
 ## 👶 Dependencies
@@ -86,13 +87,13 @@ Options:
   --help         Show this message and exit.
 ```
 
-## 🪄 Autocompletion
+## 🔮 Autocompletion
 To enable tab completion you will need to configure your preferred shell to use it. Currently `bash` and `zsh` are supported.
 
 This configuration is totally optional, but may be useful if you use `eag-sync` often.
 
 ### bash
-Add the following to ` ~/.bashrc`:
+Add the following to `~/.bashrc`:
 ```shell
 eval "$(_EAG_SYNC_COMPLETE=bash_source eag-sync)"
 ```
@@ -102,6 +103,20 @@ Add the following to `~/.zshrc`:
 ```shell
 eval "$(_EAG_SYNC_COMPLETE=zsh_source eag-sync)"
 ```
+
+## 🐋 Docker
+A Docker image that executes `eag-sync sync` on a `cron` schedule is available on Docker Hub with the tag [`amickael/eero-adguard-sync`](https://hub.docker.com/repository/docker/amickael/eero-adguard-sync). Some environment variables are required when running a container, see the table below for details.
+
+You can also build the image locally using the `Dockerfile` located in `/docker`.
+
+**Variable**|**Name**|**Notes**|**Required**|**Default**
+-----|-----|-----|-----|-----
+EAG\_EERO\_COOKIE|Eero session cookie value|Eero session cookie value from output of `eag-sync sync --debug`|Yes| 
+EAG\_ADGUARD\_HOST|AdGuard host IP address| |Yes| 
+EAG\_ADGUARD\_USER|AdGuard admin username| |Yes| 
+EAG\_ADGUARD\_PASS|AdGuard admin password| |Yes| 
+EAG\_SYNC\_FLAGS|`eag-sync` `sync` command flags|Sync flags without the dash, e.g. `EAG_SYNC_FLAGS="d"`<br><br>Note: `-y` is always appended|No|-y
+EAG\_CRON\_SCHEDULE|Sync schedule in cron syntax|See [crontab.guru](https://crontab.guru) for examples|No|`0 0 * * *`
 
 
 ## ⚖️ License
