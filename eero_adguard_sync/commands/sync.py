@@ -64,6 +64,9 @@ class EeroAdGuardSyncHandler:
                     )
                 except HTTPError as e:
                     errors = [
+                        "id required",
+                        "client is nil",
+                        "invalid name",
                         "client already exists",
                         "another client uses the same id",
                     ]
