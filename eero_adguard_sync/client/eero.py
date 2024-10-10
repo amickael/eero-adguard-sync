@@ -59,7 +59,8 @@ class EeroClient(eero.Eero):
             new_device = {}
             for key in self.device_model_fields:
                 new_device[key] = device[key]
-            devices.append(EeroClientDevice(**new_device))
+            if new_device["nickname"]:
+                devices.append(EeroClientDevice(**new_device))
         for device in self.eeros(network):
             new_device = {}
             for key in self.eero_model_fields:
